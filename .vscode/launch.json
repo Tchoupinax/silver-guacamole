@@ -1,0 +1,28 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "(MacOS) RUST",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/rust/target/debug/rust",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "env": {
+        "RUST_LOG": "debug"
+      }
+    },
+    {
+      "name": "(MacOS) GO",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceRoot}/go/main",
+      "args": [],
+      "cwd": "${workspaceRoot}",
+      "env": {}
+    }
+  ]
+}
