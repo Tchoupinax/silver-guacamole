@@ -7,8 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-
-  build:
+  build-go:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
