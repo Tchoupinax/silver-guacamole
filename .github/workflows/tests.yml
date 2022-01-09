@@ -1,0 +1,65 @@
+name: Tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: set up Go
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.17
+
+    - name: build Go
+      run: cd go && go build *.go
+
+    - name: cargo cache
+      uses: actions/cache@v1
+      with:
+        path: ~/.cargo
+        key: ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
+          ${{ runner.os }}-cargo
+
+    - name: cargo target cache
+      uses: actions/cache@v1
+      with:
+        path: rust/target/debug/rust
+        key: ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
+          ${{ runner.os }}-cargo-target
+
+    - name: build Rust
+      run: cd rust && cargo build --verbose
+
+    - name: start Rust server
+      run: RUST_LOG=debug ./rust/target/debug/rust &
+
+    - name: start Go server
+      run: cd go && ./main  &
+
+    - name: install Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: run test
+      run: npm ci && npm test
