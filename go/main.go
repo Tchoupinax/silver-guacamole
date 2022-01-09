@@ -72,9 +72,9 @@ func postLink(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := map[string]interface{}{
-		"status": "success",
-		"code":   200,
-		"data":   linkBody,
+		"statusd": "success",
+		"code":    200,
+		"data":    linkBody,
 	}
 
 	payload, err := json.Marshal(data)
