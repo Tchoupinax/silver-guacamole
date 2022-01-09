@@ -37,12 +37,11 @@ jobs:
     - name: start Go server
       run: cd go && ls -la && ./main  &
 
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: install Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
 
-    - run: npm ci
-
-    - run: npm test
+    - name: run test
+      run: npm ci && npm test
