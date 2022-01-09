@@ -55,6 +55,9 @@ jobs:
     - name: start Go server
       run: cd go && ./main  &
 
+    - name: start Node-express server
+      run: cd node-express && npm i && node index.js &
+
     - name: install Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
