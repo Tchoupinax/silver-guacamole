@@ -28,7 +28,7 @@ jobs:
     - name: build Go
       run: cd go && go build *.go
 
-    - name: Cargo Cache
+    - name: cargo cache
       uses: actions/cache@v1
       with:
         path: ~/.cargo
@@ -37,10 +37,10 @@ jobs:
           ${{ runner.os }}-cargo-${{ hashFiles('Cargo.toml') }}
           ${{ runner.os }}-cargo
 
-    - name: Cargo Target Cache
+    - name: cargo target cache
       uses: actions/cache@v1
       with:
-        path: target
+        path: rust/target/debug/rust
         key: ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
         restore-keys: |
           ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
@@ -53,7 +53,7 @@ jobs:
       run: RUST_LOG=debug ./rust/target/debug/rust &
 
     - name: start Go server
-      run: cd go && ls -la && ./main  &
+      run: cd go && ./main  &
 
     - name: install Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
