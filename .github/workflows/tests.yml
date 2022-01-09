@@ -30,4 +30,4 @@ jobs:
       run: RUST_LOG=debug ./rust/target/debug/rust &
 
     - name: start Go server
-      run: ./go/main  &
+      run: ls -la && ./go/main  &
