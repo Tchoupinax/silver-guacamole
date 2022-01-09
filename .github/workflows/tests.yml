@@ -28,8 +28,13 @@ jobs:
     - name: build Go
       run: cd go && go build *.go
 
-    - name: cache rust
-      uses: Swatinem/rust-cache@v1.3.0
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
     - name: build Rust
       run: cd rust && cargo build --verbose
