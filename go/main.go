@@ -1,22 +1,23 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
-	"encoding/json"
+	"silver-guacamole/utils"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/gorilla/mux"
-
-	Utils "silver-guacamole/utils"
 )
 
 var (
+	// nolint gochecknoglobals
 	LINKS = make(map[string]string)
-	PORT  = 4010
+	// nolint gochecknoglobals
+	PORT = 4010
 )
 
 func getHome(w http.ResponseWriter, r *http.Request) {
@@ -33,27 +34,17 @@ func getLink(w http.ResponseWriter, r *http.Request) {
 
 	log.Debug(fmt.Sprintf("getLink [token=%s]", params["token"]))
 
-	if r.Method != "GET" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(LINKS[token]))
+	_, _ = w.Write([]byte(LINKS[token]))
 }
 
 func postLink(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		w.WriteHeader(http.StatusMethodNotAllowed)
-		return
-	}
-
 	if r.Body == nil {
 		http.Error(w, "Please send a request body", 400)
 		return
 	}
 
-	var token = Utils.RandomString(16)
+	token := utils.RandomString(16)
 
 	var inputLink InputLink
 	err := json.NewDecoder(r.Body).Decode(&inputLink)
@@ -63,19 +54,19 @@ func postLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	log.Debug(fmt.Sprintf("postLink [url=%s]", inputLink.Url))
+	log.Debug(fmt.Sprintf("postLink [url=%s]", inputLink.URL))
 
-	LINKS[token] = inputLink.Url
+	LINKS[token] = inputLink.URL
 
 	linkBody := map[string]interface{}{
 		"url":   fmt.Sprintf("%s%d%s%s", "http://localhost:", PORT, "/link/", token),
 		"token": token,
 	}
 
-	data := map[string]interface{}{
-		"status": "success",
-		"code":   200,
-		"data":   linkBody,
+	data := &Response{
+		Status: "success",
+		Code:   200,
+		Data:   linkBody,
 	}
 
 	payload, err := json.Marshal(data)
@@ -86,16 +77,16 @@ func postLink(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
-	w.Write(payload)
+	_, _ = w.Write(payload)
 }
 
 func main() {
 	log.SetLevel(log.DebugLevel)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/", getHome)
-	r.HandleFunc("/link", postLink)
-	r.HandleFunc("/link/{token}", getLink)
+	r.HandleFunc("/", getHome).Methods("GET")
+	r.HandleFunc("/link", postLink).Methods("POST")
+	r.HandleFunc("/link/{token}", getLink).Methods("GET")
 
 	http.Handle("/", r)
 
@@ -105,6 +96,7 @@ func main() {
 		// Good practice: enforce timeouts for servers you create!
 		WriteTimeout: 15 * time.Second,
 		ReadTimeout:  15 * time.Second,
+		IdleTimeout:  15 * time.Second,
 	}
 
 	log.Info(fmt.Sprintf("server listening on %d", PORT))

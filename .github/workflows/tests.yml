@@ -25,6 +25,11 @@ jobs:
       with:
         go-version: 1.17
 
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v2
+      with:
+        version: v1.43.0
+
     - name: build Go
       run: cd go && go build *.go
 
