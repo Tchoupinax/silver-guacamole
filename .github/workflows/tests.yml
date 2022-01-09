@@ -8,7 +8,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  
+
 jobs:
   build-go:
     runs-on: ubuntu-latest
@@ -20,8 +20,14 @@ jobs:
       with:
         go-version: 1.17
 
-    - name: build GO
+    - name: build Go
       run: cd go && go build -v ./...
-      
+
     - name: build Rust
       run: cd rust && cargo build --verbose
+
+    - name: start Rust server
+      run: RUST_LOG=debug ./rust/target/debug/rust &
+
+    - name: start Go server
+      run: ./go/main  &
