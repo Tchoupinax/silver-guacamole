@@ -28,11 +28,11 @@ jobs:
     - name: build Go
       run: cd go && go build *.go
 
-    # - name: build Rust
-    #   run: cd rust && cargo build --verbose
+    - name: build Rust
+      run: cd rust && cargo build --verbose
 
-    # - name: start Rust server
-    #   run: RUST_LOG=debug ./rust/target/debug/rust &
+    - name: start Rust server
+      run: RUST_LOG=debug ./rust/target/debug/rust &
 
     - name: start Go server
       run: cd go && ls -la && ./main  &
