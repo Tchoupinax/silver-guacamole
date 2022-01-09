@@ -28,22 +28,21 @@ func getHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func getLink(w http.ResponseWriter, r *http.Request) {
-	log.Debug("getLink")
+	var params = mux.Vars(r)
+	var token = params["token"]
+
+	log.Debug(fmt.Sprintf("getLink [token=%s]", params["token"]))
 
 	if r.Method != "GET" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
 	}
 
-	var params = mux.Vars(r)
-
 	w.WriteHeader(http.StatusOK)
-	w.Write([]byte(LINKS[params["token"]]))
+	w.Write([]byte(LINKS[token]))
 }
 
 func postLink(w http.ResponseWriter, r *http.Request) {
-	log.Debug("postLink")
-
 	if r.Method != "POST" {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
@@ -63,6 +62,8 @@ func postLink(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	log.Debug(fmt.Sprintf("postLink [url=%s]", inputLink.Url))
 
 	LINKS[token] = inputLink.Url
 

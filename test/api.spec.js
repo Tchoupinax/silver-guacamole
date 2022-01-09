@@ -4,10 +4,23 @@ chai.use(require('chai-http'));
 
 import { describe, it, expect } from 'vitest';
 
-const path = 'http://localhost:4010';
+export function testEach(cases) {
+  return (name, fn) => {
+    cases.forEach(items => {
+      it(`[${items[0]},${items[1]}] - ${name}`, () => fn(...items));
+    });
+  };
+}
+
+const languages = [
+  ['GO', 4010],
+  ['RUST', 4020],
+];
 
 describe('home', () => {
-  it('should return OK with GET request', async () => {
+  testEach(languages)('should return OK with GET request %i', async (name, port) => {
+    const path = `http://localhost:${port}`;
+
     const res = await chai.request(path).get('/');
 
     expect(res.status).toBe(200);
@@ -16,7 +29,9 @@ describe('home', () => {
 });
 
 describe('post and get', () => {
-  it('should create and recover a link (https://www.google.fr)', async () => {
+  testEach(languages)('should create and recover a link (https://www.google.fr)', async (name, port) => {
+    const path = `http://localhost:${port}`;
+
     const res = await chai
       .request(path)
       .post('/link')
@@ -41,7 +56,9 @@ describe('post and get', () => {
     expect(get.text).toBe('https://www.google.fr');
   });
 
-  it('should create and recover a link (https://github.com)', async () => {
+  testEach(languages)('should create and recover a link (https://github.com)', async (name, port) => {
+    const path = `http://localhost:${port}`;
+
     const res = await chai
       .request(path)
       .post('/link')
