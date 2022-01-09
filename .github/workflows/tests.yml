@@ -28,6 +28,9 @@ jobs:
     - name: build Go
       run: cd go && go build *.go
 
+    - name: Rust Cache
+      uses: Swatinem/rust-cache@v1.3.0
+
     - name: build Rust
       run: cd rust && cargo build --verbose
 
