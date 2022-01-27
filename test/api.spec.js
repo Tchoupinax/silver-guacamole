@@ -1,8 +1,10 @@
 import 'chai-http';
-import * as chai from 'chai';
-chai.use(require('chai-http'));
 
-import { describe, it, expect } from 'vitest';
+import * as chai from 'chai';
+
+import { describe, expect, it } from 'vitest';
+
+chai.use(require('chai-http'));
 
 export function testEach(cases) {
   return (name, fn) => {
@@ -16,6 +18,7 @@ const languages = [
   ['GO', 4010],
   ['RUST', 4020],
   ['NODE-EXPRESS', 4030],
+  ['PHP-LARAVEL', 4040],
 ];
 
 describe('home', () => {
