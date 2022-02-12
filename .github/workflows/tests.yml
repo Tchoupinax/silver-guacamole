@@ -52,17 +52,26 @@ jobs:
           ${{ runner.os }}-cargo-target-${{ hashFiles('Cargo.toml') }}
           ${{ runner.os }}-cargo-target
 
-    - name: build Rust
-      run: cd rust && cargo build --verbose
+    # - name: build Rust
+    #   run: cd rust && cargo build --verbose
 
-    - name: start Rust server
-      run: RUST_LOG=debug ./rust/target/debug/rust &
+    # - name: start Rust server
+    #   run: RUST_LOG=debug ./rust/target/debug/rust &
 
-    - name: start Go server
-      run: cd go && ./main  &
+    # - name: start Go server
+    #   run: cd go && ./main  &
 
-    - name: start Node-express server
-      run: cd node-express && npm i && node index.js &
+    # - name: start Node-express server
+    #   run: cd node-express && npm i && node index.js &
+
+    - name: start PHP-Laravel server
+      run: cd php-laravel && apt update && apt install -y curl php && curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php && php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer && php /usr/local/bin/composer install && php composer install && php artisan serve --port 4040
+
+    - name: build nest-js server
+      run: cd node-nest && npm i && npm run build
+
+    - name: start nest-js server
+      run: cd node-nest && node dist/main.js &
 
     - name: install Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
