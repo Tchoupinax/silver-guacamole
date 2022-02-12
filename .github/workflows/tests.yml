@@ -64,6 +64,9 @@ jobs:
     - name: start Node-express server
       run: cd node-express && npm i && node index.js &
 
+    - name: start PHP-Laravel server
+      run: php artisan serve --port 4040
+
     - name: build nest-js server
       run: cd node-nest && npm i && npm run build
 
