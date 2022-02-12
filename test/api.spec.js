@@ -19,6 +19,7 @@ const languages = [
   ['RUST', 4020],
   ['NODE-EXPRESS', 4030],
   ['PHP-LARAVEL', 4040],
+  ['NODE-NEST', 4050],
 ];
 
 describe('home', () => {
