@@ -64,6 +64,12 @@ jobs:
     - name: start Node-express server
       run: cd node-express && npm i && node index.js &
 
+    - name: build nest-js server
+      run: cd node-nest && npm i && npm run build
+
+    - name: start nest-js server
+      run: cd node-nest && node dist/main.js &
+
     - name: install Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v2
       with:
