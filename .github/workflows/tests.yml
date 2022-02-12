@@ -65,7 +65,7 @@ jobs:
     #   run: cd node-express && npm i && node index.js &
 
     - name: start PHP-Laravel server
-      run: cd php-laravel && php artisan serve --port 4040
+      run: cd php-laravel && apt update && apt install -y curl php && curl -sS https://getcomposer.org/installer -o /tmp/composer-setup.php && php /tmp/composer-setup.php --install-dir=/usr/local/bin --filename=composer && php /usr/local/bin/composer install && php composer install && php artisan serve --port 4040
 
     - name: build nest-js server
       run: cd node-nest && npm i && npm run build
